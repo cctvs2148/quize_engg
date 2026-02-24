@@ -1,0 +1,577 @@
+/**
+ * Online Quiz System - Admin Panel Stylesheet
+ */
+
+/* ==================== ADMIN LAYOUT ==================== */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ==================== SIDEBAR ==================== */
+.sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    color: var(--white);
+    position: fixed;
+    height: 100vh;
+    overflow-y: auto;
+    transition: var(--transition);
+    z-index: 1000;
+}
+
+.sidebar-header {
+    padding: 25px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--white);
+    font-size: 1.3rem;
+    font-weight: 700;
+}
+
+.sidebar-logo i {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+}
+
+.sidebar-nav {
+    padding: 20px 0;
+}
+
+.nav-section {
+    margin-bottom: 25px;
+}
+
+.nav-section-title {
+    padding: 10px 20px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray-500);
+    font-weight: 600;
+}
+
+.sidebar-nav a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    color: var(--gray-400);
+    transition: var(--transition);
+    border-left: 3px solid transparent;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--white);
+    border-left-color: var(--primary-color);
+}
+
+.sidebar-nav a.active {
+    background: rgba(67, 97, 238, 0.2);
+    color: var(--white);
+    border-left-color: var(--primary-color);
+}
+
+.sidebar-nav a i {
+    width: 20px;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.sidebar-nav a span {
+    font-size: 0.95rem;
+}
+
+/* ==================== MAIN CONTENT ==================== */
+.admin-main {
+    flex: 1;
+    margin-left: 260px;
+    background: var(--gray-100);
+    min-height: 100vh;
+}
+
+.admin-header {
+    background: var(--white);
+    padding: 20px 30px;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.admin-header-left h1 {
+    font-size: 1.5rem;
+    color: var(--dark-color);
+}
+
+.admin-header-left p {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+}
+
+.admin-header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.admin-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.admin-user-avatar {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-weight: 700;
+}
+
+.admin-user-name {
+    font-weight: 600;
+    color: var(--gray-700);
+}
+
+/* ==================== ADMIN CONTENT ==================== */
+.admin-content {
+    padding: 30px;
+}
+
+/* ==================== ADMIN STATS ==================== */
+.admin-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 25px;
+    margin-bottom: 30px;
+}
+
+.admin-stat-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.admin-stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.admin-stat-icon.users {
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--primary-color);
+}
+
+.admin-stat-icon.quizzes {
+    background: rgba(76, 201, 240, 0.15);
+    color: #0a9396;
+}
+
+.admin-stat-icon.results {
+    background: rgba(247, 37, 133, 0.15);
+    color: var(--danger-color);
+}
+
+.admin-stat-icon.avg {
+    background: rgba(248, 150, 30, 0.15);
+    color: var(--warning-color);
+}
+
+.admin-stat-info h3 {
+    font-size: 2rem;
+    color: var(--dark-color);
+    margin-bottom: 5px;
+}
+
+.admin-stat-info p {
+    color: var(--gray-600);
+    font-size: 0.9rem;
+}
+
+/* ==================== ADMIN CARDS ==================== */
+.admin-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 30px;
+}
+
+.admin-card-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-card-header h2 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+}
+
+.admin-card-body {
+    padding: 25px;
+}
+
+.admin-card-footer {
+    padding: 15px 25px;
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-100);
+}
+
+/* ==================== ADMIN TABLE ==================== */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th,
+.admin-table td {
+    padding: 15px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.admin-table th {
+    background: var(--gray-100);
+    font-weight: 600;
+    color: var(--gray-700);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-table tr:hover {
+    background: var(--gray-100);
+}
+
+.admin-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* ==================== ACTION BUTTONS ==================== */
+.action-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.action-btn {
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    border: none;
+}
+
+.action-btn.edit {
+    background: rgba(67, 97, 238, 0.15);
+    color: var(--primary-color);
+}
+
+.action-btn.edit:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.action-btn.delete {
+    background: rgba(247, 37, 133, 0.15);
+    color: var(--danger-color);
+}
+
+.action-btn.delete:hover {
+    background: var(--danger-color);
+    color: var(--white);
+}
+
+.action-btn.view {
+    background: rgba(76, 201, 240, 0.15);
+    color: #0a9396;
+}
+
+.action-btn.view:hover {
+    background: #0a9396;
+    color: var(--white);
+}
+
+/* ==================== STATUS BADGES ==================== */
+.status-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.status-badge.active {
+    background: rgba(76, 201, 240, 0.2);
+    color: #0a9396;
+}
+
+.status-badge.inactive {
+    background: rgba(108, 117, 125, 0.2);
+    color: var(--gray-600);
+}
+
+/* ==================== FORM CARD ==================== */
+.form-card {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    max-width: 700px;
+}
+
+.form-card-header {
+    padding: 25px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.form-card-header h2 {
+    font-size: 1.3rem;
+    color: var(--dark-color);
+}
+
+.form-card-body {
+    padding: 30px;
+}
+
+.form-card-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-100);
+    display: flex;
+    gap: 15px;
+}
+
+/* ==================== QUESTION CARD ==================== */
+.question-item {
+    background: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.question-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.question-item-text {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.question-item-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.question-options {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.question-option {
+    padding: 10px 15px;
+    background: var(--white);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    color: var(--gray-700);
+}
+
+.question-option.correct {
+    background: rgba(76, 201, 240, 0.2);
+    color: #0a9396;
+    font-weight: 600;
+}
+
+/* ==================== MODAL ==================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    background: var(--white);
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 500px;
+    transform: scale(0.9);
+    transition: var(--transition);
+}
+
+.modal-overlay.active .modal {
+    transform: scale(1);
+}
+
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 1.2rem;
+    color: var(--dark-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-500);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    color: var(--danger-color);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-footer {
+    padding: 15px 25px;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+/* ==================== TOGGLE SIDEBAR ==================== */
+.sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--gray-700);
+    cursor: pointer;
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .admin-main {
+        margin-left: 0;
+    }
+    
+    .sidebar-toggle {
+        display: block;
+    }
+    
+    .admin-header {
+        padding: 15px 20px;
+    }
+    
+    .admin-content {
+        padding: 20px;
+    }
+    
+    .question-options {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .admin-table {
+        font-size: 0.85rem;
+    }
+    
+    .admin-table th,
+    .admin-table td {
+        padding: 12px 15px;
+    }
+    
+    .action-btns {
+        flex-direction: column;
+    }
+    
+    .form-card-footer {
+        flex-direction: column;
+    }
+    
+    .form-card-footer .btn {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .admin-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .admin-header-right {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .admin-card-header {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .admin-card-header .btn {
+        width: 100%;
+    }
+}
