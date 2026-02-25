@@ -168,6 +168,168 @@ function countQuestions($quizId) {
     return $row['count'];
 }
 
+// ==================== QUIZ ATTEMPT FUNCTIONS ====================
+
+/**
+ * Get or create an active quiz attempt for a user
+ * Returns the attempt with shuffled question IDs
+ */
+function getOrCreateQuizAttempt($userId, $quizId) {
+    global $connection;
+    
+    // Check for existing in-progress attempt
+    $stmt = $connection->prepare("
+        SELECT * FROM quiz_attempts 
+        WHERE user_id = ? AND quiz_id = ? AND status = 'in_progress' 
+        ORDER BY started_at DESC LIMIT 1
+    ");
+    $stmt->bind_param("ii", $userId, $quizId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        return $result->fetch_assoc();
+    }
+    
+    // Create new attempt with shuffled questions
+    $questions = getQuestionsByQuizId($quizId);
+    $questionIds = array_column($questions, 'id');
+    
+    // Shuffle using user-specific seed for unique randomization per user
+    $seed = $userId . $quizId . time();
+    $shuffledIds = shuffleWithSeed($questionIds, $seed);
+    
+    $shuffledJson = json_encode($shuffledIds);
+    
+    $stmt = $connection->prepare("
+        INSERT INTO quiz_attempts (user_id, quiz_id, shuffled_question_ids, status) 
+        VALUES (?, ?, ?, 'in_progress')
+    ");
+    $stmt->bind_param("iis", $userId, $quizId, $shuffledJson);
+    $stmt->execute();
+    
+    return [
+        'id' => $connection->insert_id,
+        'user_id' => $userId,
+        'quiz_id' => $quizId,
+        'shuffled_question_ids' => $shuffledJson,
+        'status' => 'in_progress'
+    ];
+}
+
+/**
+ * Shuffle array with a seed for reproducible randomization
+ */
+function shuffleWithSeed($array, $seed) {
+    $shuffled = $array;
+    
+    // Convert seed to a numeric value
+    $seedValue = crc32($seed);
+    
+    // Use Fisher-Yates shuffle with seeded random
+    $count = count($shuffled);
+    for ($i = $count - 1; $i > 0; $i--) {
+        // Generate pseudo-random index based on seed
+        $j = ($seedValue * ($i + 1)) % ($i + 1);
+        
+        // Swap elements
+        $temp = $shuffled[$i];
+        $shuffled[$i] = $shuffled[$j];
+        $shuffled[$j] = $temp;
+        
+        // Update seed for next iteration
+        $seedValue = crc32($seedValue . $i);
+    }
+    
+    return $shuffled;
+}
+
+/**
+ * Get questions in shuffled order based on attempt
+ */
+function getQuestionsByShuffledOrder($quizId, $shuffledQuestionIds) {
+    global $connection;
+    
+    $questionIds = json_decode($shuffledQuestionIds, true);
+    
+    if (empty($questionIds)) {
+        return getQuestionsByQuizId($quizId);
+    }
+    
+    // Create placeholders for IN clause
+    $placeholders = implode(',', array_fill(0, count($questionIds), '?'));
+    $types = str_repeat('i', count($questionIds));
+    
+    $stmt = $connection->prepare("SELECT * FROM questions WHERE id IN ($placeholders)");
+    $stmt->bind_param($types, ...$questionIds);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    $questions = $result->fetch_all(MYSQLI_ASSOC);
+    
+    // Order questions according to shuffled order
+    $orderedQuestions = [];
+    $questionMap = [];
+    
+    foreach ($questions as $question) {
+        $questionMap[$question['id']] = $question;
+    }
+    
+    foreach ($questionIds as $id) {
+        if (isset($questionMap[$id])) {
+            $orderedQuestions[] = $questionMap[$id];
+        }
+    }
+    
+    return $orderedQuestions;
+}
+
+/**
+ * Complete a quiz attempt
+ */
+function completeQuizAttempt($attemptId) {
+    global $connection;
+    
+    $stmt = $connection->prepare("
+        UPDATE quiz_attempts 
+        SET status = 'completed', completed_at = NOW() 
+        WHERE id = ?
+    ");
+    $stmt->bind_param("i", $attemptId);
+    
+    return $stmt->execute();
+}
+
+/**
+ * Abandon a quiz attempt (when starting fresh)
+ */
+function abandonQuizAttempts($userId, $quizId) {
+    global $connection;
+    
+    $stmt = $connection->prepare("
+        UPDATE quiz_attempts 
+        SET status = 'abandoned' 
+        WHERE user_id = ? AND quiz_id = ? AND status = 'in_progress'
+    ");
+    $stmt->bind_param("ii", $userId, $quizId);
+    
+    return $stmt->execute();
+}
+
+/**
+ * Get attempt by ID
+ */
+function getAttemptById($attemptId) {
+    global $connection;
+    
+    $stmt = $connection->prepare("SELECT * FROM quiz_attempts WHERE id = ?");
+    $stmt->bind_param("i", $attemptId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    return $result->fetch_assoc();
+}
+
 // ==================== RESULT FUNCTIONS ====================
 
 /**

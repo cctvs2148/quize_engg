@@ -118,7 +118,7 @@ $results = getUserResults($_SESSION['user_id']);
                                         <span class="badge badge-primary">
                                             <i class="fas fa-check"></i> Completed
                                         </span>
-                                        <a href="quiz.php?id=<?php echo $quiz['id']; ?>" class="btn btn-sm btn-secondary">
+                                        <a href="quiz.php?id=<?php echo $quiz['id']; ?>&retake=1" class="btn btn-sm btn-secondary">
                                             <i class="fas fa-redo"></i> Retake
                                         </a>
                                     <?php elseif ($questionCount == 0): ?>

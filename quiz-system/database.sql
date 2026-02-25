@@ -3,6 +3,7 @@
 
 -- Drop existing tables if they exist
 DROP TABLE IF EXISTS results;
+DROP TABLE IF EXISTS quiz_attempts;
 DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS password_resets;
@@ -58,6 +59,20 @@ CREATE TABLE questions (
     correct_option TINYINT NOT NULL COMMENT '1, 2, 3, or 4',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Create quiz_attempts table for storing shuffled question order
+CREATE TABLE quiz_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    quiz_id INT NOT NULL,
+    shuffled_question_ids TEXT NOT NULL COMMENT 'JSON encoded array of shuffled question IDs',
+    status ENUM('in_progress', 'completed', 'abandoned') DEFAULT 'in_progress',
+    started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    completed_at DATETIME NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_active_attempt (user_id, quiz_id, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Create results table

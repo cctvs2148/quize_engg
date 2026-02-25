@@ -27,8 +27,18 @@ if (!$quiz) {
     redirect('dashboard.php');
 }
 
-// Get questions
-$questions = getQuestionsByQuizId($quizId);
+// Check if user wants to retake the quiz (abandon old attempts and start fresh)
+$retake = isset($_GET['retake']) && $_GET['retake'] == '1';
+
+if ($retake) {
+    abandonQuizAttempts($_SESSION['user_id'], $quizId);
+}
+
+// Get or create quiz attempt (this handles shuffling)
+$attempt = getOrCreateQuizAttempt($_SESSION['user_id'], $quizId);
+
+// Get questions in shuffled order based on attempt
+$questions = getQuestionsByShuffledOrder($quizId, $attempt['shuffled_question_ids']);
 
 if (empty($questions)) {
     $_SESSION['error'] = 'This quiz has no questions yet.';
@@ -56,6 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Save result
     saveResult($_SESSION['user_id'], $quizId, $score, $totalQuestions, $correctAnswers, $wrongAnswers);
+    
+    // Complete the quiz attempt
+    completeQuizAttempt($attempt['id']);
     
     // Redirect to result page
     redirect('result.php?quiz_id=' . $quizId);
