@@ -32,6 +32,8 @@ $retake = isset($_GET['retake']) && $_GET['retake'] == '1';
 
 if ($retake) {
     abandonQuizAttempts($_SESSION['user_id'], $quizId);
+    // Redirect to remove retake parameter and start fresh
+    redirect('quiz.php?id=' . $quizId);
 }
 
 // Get or create quiz attempt (this handles shuffling)
@@ -121,6 +123,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h2><?php echo htmlspecialchars($quiz['title']); ?></h2>
                 <p style="color: var(--gray-600); margin-top: 5px;">
                     <i class="fas fa-question-circle"></i> <?php echo count($questions); ?> Questions
+                    <span style="font-size: 0.8em; color: #888; margin-left: 10px;">
+                        (Attempt ID: <?php echo $attempt['id']; ?> | Shuffled Order: <?php echo $attempt['shuffled_question_ids']; ?>)
+                    </span>
                 </p>
             </div>
             <div class="quiz-timer">

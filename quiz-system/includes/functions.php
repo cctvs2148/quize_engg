@@ -171,11 +171,40 @@ function countQuestions($quizId) {
 // ==================== QUIZ ATTEMPT FUNCTIONS ====================
 
 /**
+ * Check if quiz_attempts table exists, create if not
+ */
+function ensureQuizAttemptsTableExists() {
+    global $connection;
+    
+    $result = $connection->query("SHOW TABLES LIKE 'quiz_attempts'");
+    
+    if ($result->num_rows === 0) {
+        $createTableSQL = "
+            CREATE TABLE quiz_attempts (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                user_id INT NOT NULL,
+                quiz_id INT NOT NULL,
+                shuffled_question_ids TEXT NOT NULL COMMENT 'JSON encoded array of shuffled question IDs',
+                status ENUM('in_progress', 'completed', 'abandoned') DEFAULT 'in_progress',
+                started_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                completed_at DATETIME NULL,
+                FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+                FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+        ";
+        $connection->query($createTableSQL);
+    }
+}
+
+/**
  * Get or create an active quiz attempt for a user
  * Returns the attempt with shuffled question IDs
  */
 function getOrCreateQuizAttempt($userId, $quizId) {
     global $connection;
+    
+    // Ensure table exists
+    ensureQuizAttemptsTableExists();
     
     // Check for existing in-progress attempt
     $stmt = $connection->prepare("
@@ -223,23 +252,26 @@ function getOrCreateQuizAttempt($userId, $quizId) {
 function shuffleWithSeed($array, $seed) {
     $shuffled = $array;
     
-    // Convert seed to a numeric value
-    $seedValue = crc32($seed);
+    // Convert seed to a numeric value for mt_srand
+    $seedValue = abs(crc32($seed));
+    
+    // Seed the random number generator
+    mt_srand($seedValue);
     
     // Use Fisher-Yates shuffle with seeded random
     $count = count($shuffled);
     for ($i = $count - 1; $i > 0; $i--) {
-        // Generate pseudo-random index based on seed
-        $j = ($seedValue * ($i + 1)) % ($i + 1);
+        // Generate random index between 0 and $i
+        $j = mt_rand(0, $i);
         
         // Swap elements
         $temp = $shuffled[$i];
         $shuffled[$i] = $shuffled[$j];
         $shuffled[$j] = $temp;
-        
-        // Update seed for next iteration
-        $seedValue = crc32($seedValue . $i);
     }
+    
+    // Reset random seed
+    mt_srand();
     
     return $shuffled;
 }
@@ -290,6 +322,9 @@ function getQuestionsByShuffledOrder($quizId, $shuffledQuestionIds) {
 function completeQuizAttempt($attemptId) {
     global $connection;
     
+    // Ensure table exists
+    ensureQuizAttemptsTableExists();
+    
     $stmt = $connection->prepare("
         UPDATE quiz_attempts 
         SET status = 'completed', completed_at = NOW() 
@@ -306,6 +341,9 @@ function completeQuizAttempt($attemptId) {
 function abandonQuizAttempts($userId, $quizId) {
     global $connection;
     
+    // Ensure table exists
+    ensureQuizAttemptsTableExists();
+    
     $stmt = $connection->prepare("
         UPDATE quiz_attempts 
         SET status = 'abandoned' 
@@ -321,6 +359,9 @@ function abandonQuizAttempts($userId, $quizId) {
  */
 function getAttemptById($attemptId) {
     global $connection;
+    
+    // Ensure table exists
+    ensureQuizAttemptsTableExists();
     
     $stmt = $connection->prepare("SELECT * FROM quiz_attempts WHERE id = ?");
     $stmt->bind_param("i", $attemptId);
