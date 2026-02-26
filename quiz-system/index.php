@@ -30,8 +30,7 @@ $quizzes = getAllQuizzes();
     <nav class="navbar">
         <div class="container">
             <a href="index.php" class="logo">
-                <i class="fas fa-brain"></i>
-                QuizMaster
+                <img src="assets/images/logo.png" alt="Logo" style="max-height: 50px;">
             </a>
             <div class="nav-links">
                 <a href="index.php"><i class="fas fa-home"></i> Home</a>

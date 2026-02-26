@@ -58,6 +58,7 @@ if (isset($_SESSION['error'])) {
     <div class="auth-container">
         <div class="auth-box fade-in">
             <div class="auth-header">
+                <img src="assets/images/logo.png" alt="Logo" style="max-height: 120px; margin-bottom: 15px;">
                 <h1><i class="fas fa-sign-in-alt"></i> Welcome Back</h1>
                 <p>Login to continue to your dashboard</p>
             </div>

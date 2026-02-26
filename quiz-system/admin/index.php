@@ -41,8 +41,7 @@ $recentUsers = array_slice($recentUsers, 0, 5);
         <aside class="sidebar">
             <div class="sidebar-header">
                 <a href="index.php" class="sidebar-logo">
-                    <i class="fas fa-brain"></i>
-                    <span>QuizMaster</span>
+                    <img src="../assets/images/logo.png" alt="Logo" style="max-height: 50px;">
                 </a>
             </div>
             

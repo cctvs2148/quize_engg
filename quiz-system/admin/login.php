@@ -50,7 +50,8 @@ if (isset($_SESSION['error'])) {
 <body>
     <div class="auth-container">
         <div class="auth-box fade-in">
-            <div class="auth-header" style="background: linear-gradient(135deg, #1a1a2e, #16213e);">
+            <div class="auth-header">
+                <img src="../assets/images/logo.png" alt="Logo" style="max-height: 120px; margin-bottom: 15px;">
                 <h1><i class="fas fa-user-shield"></i> Admin Panel</h1>
                 <p>Login to access the admin dashboard</p>
             </div>

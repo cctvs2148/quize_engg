@@ -89,8 +89,7 @@ if (!$result) {
     <nav class="navbar">
         <div class="container">
             <a href="dashboard.php" class="logo">
-                <i class="fas fa-brain"></i>
-                QuizMaster
+                <img src="assets/images/logo.png" alt="Logo" style="max-height: 50px;">
             </a>
             <div class="nav-links">
                 <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>

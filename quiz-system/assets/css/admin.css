@@ -11,7 +11,7 @@
 /* ==================== SIDEBAR ==================== */
 .sidebar {
     width: 260px;
-    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    background: #D32F2F;
     color: var(--white);
     position: fixed;
     height: 100vh;
@@ -36,7 +36,7 @@
 
 .sidebar-logo i {
     font-size: 1.8rem;
-    color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .sidebar-nav {
@@ -67,15 +67,15 @@
 }
 
 .sidebar-nav a:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.1);
     color: var(--white);
-    border-left-color: var(--primary-color);
+    border-left-color: var(--secondary-color);
 }
 
 .sidebar-nav a.active {
-    background: rgba(67, 97, 238, 0.2);
+    background: rgba(251, 192, 45, 0.25);
     color: var(--white);
-    border-left-color: var(--primary-color);
+    border-left-color: var(--secondary-color);
 }
 
 .sidebar-nav a i {
@@ -92,12 +92,12 @@
 .admin-main {
     flex: 1;
     margin-left: 260px;
-    background: var(--gray-100);
+    background: #F9F9F9;
     min-height: 100vh;
 }
 
 .admin-header {
-    background: var(--white);
+    background: #E53935;
     padding: 20px 30px;
     box-shadow: var(--box-shadow);
     display: flex;
@@ -110,11 +110,11 @@
 
 .admin-header-left h1 {
     font-size: 1.5rem;
-    color: var(--dark-color);
+    color: var(--white);
 }
 
 .admin-header-left p {
-    color: var(--gray-600);
+    color: rgba(255, 255, 255, 0.9);
     font-size: 0.9rem;
 }
 
@@ -161,13 +161,14 @@
 }
 
 .admin-stat-card {
-    background: var(--white);
+    background: #FFFDE7;
     border-radius: var(--border-radius);
     padding: 25px;
     box-shadow: var(--box-shadow);
     display: flex;
     align-items: center;
     gap: 20px;
+    border: 1px solid rgba(211, 47, 47, 0.1);
 }
 
 .admin-stat-icon {
@@ -181,7 +182,7 @@
 }
 
 .admin-stat-icon.users {
-    background: rgba(67, 97, 238, 0.15);
+    background: rgba(211, 47, 47, 0.15);
     color: var(--primary-color);
 }
 
@@ -213,10 +214,11 @@
 
 /* ==================== ADMIN CARDS ==================== */
 .admin-card {
-    background: var(--white);
+    background: #FFFDE7;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     margin-bottom: 30px;
+    border: 1px solid rgba(211, 47, 47, 0.1);
 }
 
 .admin-card-header {
@@ -289,7 +291,7 @@
 }
 
 .action-btn.edit {
-    background: rgba(67, 97, 238, 0.15);
+    background: rgba(211, 47, 47, 0.15);
     color: var(--primary-color);
 }
 

@@ -5,14 +5,14 @@
 
 /* ==================== CSS VARIABLES ==================== */
 :root {
-    --primary-color: #4361ee;
-    --primary-dark: #3a56d4;
-    --secondary-color: #3f37c9;
+    --primary-color: #D32F2F;
+    --primary-dark: #B71C1C;
+    --secondary-color: #FBC02D;
     --success-color: #4cc9f0;
     --danger-color: #f72585;
     --warning-color: #f8961e;
     --info-color: #90e0ef;
-    --dark-color: #1a1a2e;
+    --dark-color: #333333;
     --light-color: #f8f9fa;
     --white: #ffffff;
     --gray-100: #f8f9fa;
@@ -43,7 +43,7 @@ html {
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
     min-height: 100vh;
     color: var(--gray-800);
     line-height: 1.6;
@@ -91,10 +91,11 @@ img {
 .navbar {
     background: var(--white);
     padding: 15px 0;
-    box-shadow: var(--box-shadow);
+    box-shadow: 0 2px 10px rgba(211, 47, 47, 0.1);
     position: sticky;
     top: 0;
     z-index: 1000;
+    border-bottom: 3px solid #D32F2F;
 }
 
 .navbar .container {
@@ -131,7 +132,7 @@ img {
 }
 
 .nav-links a:hover {
-    color: var(--primary-color);
+    color: var(--secondary-color);
     background: var(--gray-100);
 }
 
@@ -236,7 +237,7 @@ img {
 .form-control:focus {
     outline: none;
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    box-shadow: 0 0 0 3px rgba(211, 47, 47, 0.1);
 }
 
 .form-control::placeholder {
@@ -254,11 +255,12 @@ textarea.form-control {
 
 /* ==================== CARDS ==================== */
 .card {
-    background: var(--white);
+    background: #FFFDE7;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     overflow: hidden;
     transition: var(--transition);
+    border: 1px solid rgba(211, 47, 47, 0.1);
 }
 
 .card:hover {
@@ -361,11 +363,12 @@ textarea.form-control {
 }
 
 .quiz-card {
-    background: var(--white);
+    background: #FFFDE7;
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     overflow: hidden;
     transition: var(--transition);
+    border: 1px solid rgba(211, 47, 47, 0.1);
 }
 
 .quiz-card:hover {
@@ -444,11 +447,12 @@ textarea.form-control {
 }
 
 .stat-card {
-    background: var(--white);
+    background: #FFFDE7;
     border-radius: var(--border-radius);
     padding: 25px;
     text-align: center;
     box-shadow: var(--box-shadow);
+    border: 1px solid rgba(211, 47, 47, 0.1);
 }
 
 .stat-card i {
@@ -554,7 +558,7 @@ textarea.form-control {
 
 .option-item:hover {
     border-color: var(--primary-color);
-    background: rgba(67, 97, 238, 0.05);
+    background: rgba(211, 47, 47, 0.05);
 }
 
 .option-item input[type="radio"] {
@@ -563,7 +567,7 @@ textarea.form-control {
 
 .option-item.selected {
     border-color: var(--primary-color);
-    background: rgba(67, 97, 238, 0.1);
+    background: rgba(211, 47, 47, 0.1);
 }
 
 .option-label {
@@ -649,7 +653,7 @@ textarea.form-control {
 }
 
 .result-stat.total {
-    background: rgba(67, 97, 238, 0.2);
+    background: rgba(211, 47, 47, 0.2);
     color: var(--primary-color);
 }
 
@@ -730,7 +734,7 @@ textarea.form-control {
 }
 
 .badge-primary {
-    background: rgba(67, 97, 238, 0.2);
+    background: rgba(211, 47, 47, 0.2);
     color: var(--primary-color);
 }
 
