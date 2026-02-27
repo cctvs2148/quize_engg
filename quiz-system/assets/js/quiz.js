@@ -136,6 +136,53 @@ function submitQuiz() {
 }
 
 /**
+ * Show a specific question by index
+ */
+function showQuestion(index) {
+    const questions = document.querySelectorAll('.question-slide');
+    questions.forEach((q, i) => {
+        if (i === index) {
+            q.style.display = 'block';
+        } else {
+            q.style.display = 'none';
+        }
+    });
+    
+    // Update progress
+    const currentInput = document.getElementById('current-question');
+    if (currentInput) {
+        currentInput.value = index;
+    }
+    
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/**
+ * Go to next question (requires answer)
+ */
+function nextQuestion(currentIndex, questionId) {
+    // Check if current question is answered
+    if (!answers[questionId]) {
+        alert('Please select an answer before moving to the next question.');
+        return;
+    }
+    
+    showQuestion(currentIndex + 1);
+}
+
+/**
+ * Initialize one-question-at-a-time mode
+ */
+function initQuestionNavigation() {
+    const questions = document.querySelectorAll('.question-slide');
+    if (questions.length > 0) {
+        // Hide all questions except the first one
+        showQuestion(0);
+    }
+}
+
+/**
  * Confirm before leaving quiz page
  */
 function confirmExit() {
@@ -151,6 +198,11 @@ document.addEventListener('DOMContentLoaded', function() {
     if (durationElement) {
         const duration = parseInt(durationElement.value);
         initTimer(duration);
+    }
+    
+    // Initialize question navigation if on quiz page
+    if (document.querySelector('.question-slide')) {
+        initQuestionNavigation();
     }
     
     // Add click handlers to options

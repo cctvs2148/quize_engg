@@ -472,6 +472,79 @@ textarea.form-control {
 }
 
 /* ==================== QUIZ PAGE ==================== */
+.selected-quiz-banner {
+    background: linear-gradient(135deg, var(--primary-color), #B71C1C);
+    color: var(--white);
+    padding: 20px 25px;
+    border-radius: var(--border-radius);
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--box-shadow-lg);
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.selected-quiz-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.selected-quiz-info i {
+    font-size: 2rem;
+    color: var(--secondary-color);
+}
+
+.selected-quiz-info strong {
+    display: block;
+    font-size: 1.1rem;
+}
+
+.selected-quiz-meta {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.selected-quiz-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.selected-quiz-banner .btn-secondary {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: var(--white);
+}
+
+.selected-quiz-banner .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .selected-quiz-banner {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .selected-quiz-info {
+        flex-direction: column;
+    }
+}
+
 .quiz-dashboard {
     position: fixed;
     top: 0;
@@ -555,6 +628,23 @@ textarea.form-control {
     padding: 30px;
     margin-bottom: 20px;
     box-shadow: var(--box-shadow);
+}
+
+.question-slide {
+    display: none;
+}
+
+.question-slide:first-child {
+    display: block;
+}
+
+.question-navigation {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--gray-200);
 }
 
 .question-number {

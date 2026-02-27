@@ -11,11 +11,28 @@ require_once 'includes/functions.php';
 // Require user login
 requireLogin();
 
-// Get quiz ID from URL
-$quizId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+// Check if quiz is selected in session
+if (!isset($_SESSION['selected_quiz_id'])) {
+    $_SESSION['error'] = 'Please select a quiz first.';
+    redirect('dashboard.php');
+}
+
+// Get quiz ID from session or URL (session takes priority)
+$quizId = $_SESSION['selected_quiz_id'];
+
+// Allow URL override only if session matches or for retake
+if (isset($_GET['id']) && isset($_GET['retake'])) {
+    $quizId = (int)$_GET['id'];
+}
 
 if ($quizId <= 0) {
     $_SESSION['error'] = 'Invalid quiz ID.';
+    redirect('dashboard.php');
+}
+
+// Verify the quiz matches the selected one (unless retaking)
+if (!isset($_GET['retake']) && $quizId != $_SESSION['selected_quiz_id']) {
+    $_SESSION['error'] = 'Please select a quiz from your dashboard.';
     redirect('dashboard.php');
 }
 
@@ -158,9 +175,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <form id="quiz-form" method="POST" action="">
             <input type="hidden" id="quiz-duration" value="<?php echo $quiz['duration']; ?>">
             <input type="hidden" id="total-questions" value="<?php echo count($questions); ?>">
-
+            <input type="hidden" id="current-question" value="0">
+            
             <?php foreach ($questions as $index => $question): ?>
-                <div class="question-card fade-in">
+                <div class="question-card fade-in question-slide" data-question-index="<?php echo $index; ?>">
                     <span class="question-number">Question <?php echo ($index + 1); ?> of <?php echo count($questions); ?></span>
                     <h3 class="question-text"><?php echo htmlspecialchars($question['question_text']); ?></h3>
                     
@@ -193,15 +211,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <span class="option-label"><?php echo htmlspecialchars($question['option4']); ?></span>
                         </label>
                     </div>
+                    
+                    <!-- Navigation Buttons -->
+                    <div class="question-navigation">
+                        <?php if ($index > 0): ?>
+                            <button type="button" class="btn btn-secondary" onclick="showQuestion(<?php echo $index - 1; ?>)">
+                                <i class="fas fa-arrow-left"></i> Previous
+                            </button>
+                        <?php else: ?>
+                            <div></div>
+                        <?php endif; ?>
+                        
+                        <?php if ($index < count($questions) - 1): ?>
+                            <button type="button" class="btn btn-primary" onclick="nextQuestion(<?php echo $index; ?>, <?php echo $question['id']; ?>)">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                        <?php else: ?>
+                            <button type="button" onclick="submitQuiz()" class="btn btn-lg btn-success">
+                                <i class="fas fa-check"></i> Submit Quiz
+                            </button>
+                        <?php endif; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
-
-            <!-- Submit Button -->
-            <div class="text-center mt-4 fade-in">
-                <button type="button" onclick="submitQuiz()" class="btn btn-lg btn-primary">
-                    <i class="fas fa-paper-plane"></i> Submit Quiz
-                </button>
-            </div>
         </form>
     </div>
 

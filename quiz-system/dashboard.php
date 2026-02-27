@@ -14,11 +14,44 @@ requireLogin();
 // Get current user
 $user = getCurrentUser();
 
+// Handle quiz selection
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['select_quiz'])) {
+    $quizId = (int)$_POST['quiz_id'];
+    $_SESSION['selected_quiz_id'] = $quizId;
+    unset($_SESSION['quiz_started']);
+}
+
+// Handle start quiz
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['start_quiz'])) {
+    if (isset($_SESSION['selected_quiz_id'])) {
+        $_SESSION['quiz_started'] = true;
+        redirect('quiz.php?id=' . $_SESSION['selected_quiz_id']);
+    }
+}
+
+// Handle cancel selection
+if (isset($_GET['cancel_selection'])) {
+    unset($_SESSION['selected_quiz_id']);
+    unset($_SESSION['quiz_started']);
+}
+
 // Get all active quizzes
 $quizzes = getAllQuizzes();
 
 // Get user's previous results
 $results = getUserResults($_SESSION['user_id']);
+
+// Get selected quiz from session
+$selectedQuizId = $_SESSION['selected_quiz_id'] ?? null;
+$selectedQuiz = null;
+if ($selectedQuizId) {
+    foreach ($quizzes as $q) {
+        if ($q['id'] == $selectedQuizId) {
+            $selectedQuiz = $q;
+            break;
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -57,6 +90,33 @@ $results = getUserResults($_SESSION['user_id']);
                 <h1>Welcome, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</h1>
                 <p>Ready to test your knowledge? Choose a quiz below!</p>
             </div>
+
+            <!-- Selected Quiz Banner -->
+            <?php if ($selectedQuiz): ?>
+                <?php $selectedQuestionCount = countQuestions($selectedQuiz['id']); ?>
+                <div class="selected-quiz-banner fade-in">
+                    <div class="selected-quiz-info">
+                        <i class="fas fa-check-circle"></i>
+                        <div>
+                            <strong>Quiz Selected:</strong> <?php echo htmlspecialchars($selectedQuiz['title']); ?>
+                            <span class="selected-quiz-meta">
+                                <?php echo $selectedQuestionCount; ?> Questions | <?php echo $selectedQuiz['duration']; ?> Minutes
+                            </span>
+                        </div>
+                    </div>
+                    <div class="selected-quiz-actions">
+                        <a href="dashboard.php?cancel_selection=1" class="btn btn-sm btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        <form method="POST" action="dashboard.php" style="display: inline;">
+                            <input type="hidden" name="start_quiz" value="1">
+                            <button type="submit" class="btn btn-sm btn-primary btn-lg">
+                                <i class="fas fa-play"></i> Start Quiz
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- Stats -->
             <div class="stats-grid">
@@ -126,10 +186,26 @@ $results = getUserResults($_SESSION['user_id']);
                                             <i class="fas fa-play"></i> Start Quiz
                                         </button>
                                     <?php else: ?>
-                                        <span class="badge badge-success">Available</span>
-                                        <a href="quiz.php?id=<?php echo $quiz['id']; ?>" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-play"></i> Start Quiz
-                                        </a>
+                                        <?php if ($selectedQuizId == $quiz['id']): ?>
+                                            <span class="badge badge-warning">
+                                                <i class="fas fa-check-circle"></i> Selected
+                                            </span>
+                                            <form method="POST" action="dashboard.php" style="display: inline;">
+                                                <input type="hidden" name="start_quiz" value="1">
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-play"></i> Start Quiz
+                                                </button>
+                                            </form>
+                                        <?php else: ?>
+                                            <span class="badge badge-success">Available</span>
+                                            <form method="POST" action="dashboard.php" style="display: inline;">
+                                                <input type="hidden" name="select_quiz" value="1">
+                                                <input type="hidden" name="quiz_id" value="<?php echo $quiz['id']; ?>">
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <i class="fas fa-check"></i> Select
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
                                     <?php endif; ?>
                                 </div>
                             </div>
