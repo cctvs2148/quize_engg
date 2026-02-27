@@ -99,6 +99,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
+    <!-- Fixed Quiz Header Dashboard -->
+    <div class="quiz-dashboard">
+        <div class="quiz-dashboard-content">
+            <div class="quiz-title">
+                <h2><?php echo htmlspecialchars($quiz['title']); ?></h2>
+                <p style="color: var(--gray-600); margin-top: 5px; font-size: 0.9rem;">
+                    <i class="fas fa-question-circle"></i> <?php echo count($questions); ?> Questions
+                </p>
+            </div>
+            <div class="quiz-timer">
+                <i class="fas fa-clock"></i>
+                <span id="timer">00:00</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="navbar">
         <div class="container">
@@ -116,8 +132,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Quiz Container -->
     <div class="quiz-container">
-        <!-- Quiz Header -->
-        <div class="quiz-header fade-in">
+        <!-- Quiz Header (Now part of dashboard, hidden here to avoid duplicate) -->
+        <div class="quiz-header fade-in" style="display: none;">
             <div>
                 <h2><?php echo htmlspecialchars($quiz['title']); ?></h2>
                 <p style="color: var(--gray-600); margin-top: 5px;">

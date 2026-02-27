@@ -14,6 +14,63 @@ requireAdminLogin();
 $message = '';
 $error = '';
 
+// Handle Add User (from slide panel)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'add') {
+    $name = sanitize($_POST['name'] ?? '');
+    $email = sanitize($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    
+    if (empty($name) || empty($email) || empty($password)) {
+        $error = 'Please fill in all fields.';
+    } else {
+        $result = registerUser($name, $email, $password);
+        if ($result['success']) {
+            $message = 'User added successfully!';
+        } else {
+            $error = $result['message'];
+        }
+    }
+}
+
+// Handle Edit User
+if (isset($_GET['edit'])) {
+    $editUserId = (int)$_GET['edit'];
+    global $connection;
+    $stmt = $connection->prepare("SELECT id, name, email FROM users WHERE id = ?");
+    $stmt->bind_param("i", $editUserId);
+    $stmt->execute();
+    $editUser = $stmt->get_result()->fetch_assoc();
+}
+
+// Handle Update User
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update') {
+    $userId = (int)$_POST['user_id'];
+    $name = sanitize($_POST['name'] ?? '');
+    $email = sanitize($_POST['email'] ?? '');
+    $newPassword = $_POST['password'] ?? '';
+    
+    if (empty($name) || empty($email)) {
+        $error = 'Please fill in all required fields.';
+    } else {
+        global $connection;
+        if (!empty($newPassword)) {
+            $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+            $stmt = $connection->prepare("UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?");
+            $stmt->bind_param("sssi", $name, $email, $hashedPassword, $userId);
+        } else {
+            $stmt = $connection->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
+            $stmt->bind_param("ssi", $name, $email, $userId);
+        }
+        
+        if ($stmt->execute()) {
+            $message = 'User updated successfully!';
+            $editUser = null;
+        } else {
+            $error = 'Failed to update user.';
+        }
+    }
+}
+
 // Handle Delete User
 if (isset($_GET['delete'])) {
     $userId = (int)$_GET['delete'];
@@ -134,6 +191,35 @@ $users = getAllUsers();
                 <?php if ($error): ?>
                     <div class="alert alert-danger">
                         <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
+                    </div>
+                <?php endif; ?>
+                
+                <!-- Edit User Form -->
+                <?php if (isset($editUser) && !empty($editUser)): ?>
+                    <div class="admin-card">
+                        <div class="admin-card-header">
+                            <h2><i class="fas fa-edit"></i> Edit User</h2>
+                            <a href="users.php" class="btn btn-sm btn-secondary">Cancel</a>
+                        </div>
+                        <form method="POST" action="users.php">
+                            <input type="hidden" name="action" value="update">
+                            <input type="hidden" name="user_id" value="<?php echo $editUser['id']; ?>">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($editUser['name']); ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email Address</label>
+                                <input type="email" name="email" class="form-control" value="<?php echo htmlspecialchars($editUser['email']); ?>" required>
+                            </div>
+                            <div class="form-group">
+                                <label>New Password (leave blank to keep current)</label>
+                                <input type="password" name="password" class="form-control" placeholder="Enter new password">
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update User
+                            </button>
+                        </form>
                     </div>
                 <?php endif; ?>
                 

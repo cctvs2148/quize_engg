@@ -115,8 +115,7 @@ if (isset($_SESSION['error'])) {
             </div>
             
             <div class="auth-footer">
-                <p>Don't have an account? <a href="register.php">Register here</a></p>
-                <p style="margin-top: 10px;">
+                <p>
                     <a href="admin/login.php" style="color: var(--gray-600); font-size: 0.9rem;">
                         <i class="fas fa-user-shield"></i> Admin Login
                     </a>

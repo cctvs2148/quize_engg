@@ -106,6 +106,9 @@ $recentUsers = array_slice($recentUsers, 0, 5);
                     </div>
                 </div>
                 <div class="admin-header-right">
+                    <button class="btn btn-primary" onclick="toggleUserPanel()">
+                        <i class="fas fa-users"></i> Manage Users
+                    </button>
                     <div class="admin-user">
                         <div class="admin-user-avatar">
                             <?php echo strtoupper(substr($_SESSION['admin_username'], 0, 1)); ?>
@@ -241,6 +244,88 @@ $recentUsers = array_slice($recentUsers, 0, 5);
         </main>
     </div>
 
+    <!-- User Management Slide Panel -->
+    <div class="user-panel" id="user-panel">
+        <div class="user-panel-header">
+            <h2><i class="fas fa-users"></i> User Details</h2>
+            <button class="user-panel-close" onclick="toggleUserPanel()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="user-panel-content">
+            <!-- Add User Form -->
+            <div class="user-panel-section">
+                <h3>Add New User</h3>
+                <form method="POST" action="users.php" id="add-user-form">
+                    <input type="hidden" name="action" value="add">
+                    <div class="form-group">
+                        <input type="text" name="name" class="form-control" placeholder="Full Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" class="form-control" placeholder="Email Address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;">
+                        <i class="fas fa-plus"></i> Add User
+                    </button>
+                </form>
+            </div>
+            
+            <!-- User List -->
+            <div class="user-panel-section">
+                <h3>Existing Users (<?php echo count($recentUsers); ?>)</h3>
+                <div class="user-list">
+                    <?php if (empty($recentUsers)): ?>
+                        <p class="text-muted">No users found.</p>
+                    <?php else: ?>
+                        <?php foreach ($recentUsers as $user): ?>
+                            <div class="user-item">
+                                <div class="user-info">
+                                    <div class="user-avatar">
+                                        <?php echo strtoupper(substr($user['name'], 0, 1)); ?>
+                                    </div>
+                                    <div class="user-details">
+                                        <strong><?php echo htmlspecialchars($user['name']); ?></strong>
+                                        <span><?php echo htmlspecialchars($user['email']); ?></span>
+                                        <small>Joined: <?php echo date('M d, Y', strtotime($user['created_at'])); ?></small>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <a href="users.php?edit=<?php echo $user['id']; ?>" class="btn btn-sm btn-secondary" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="users.php?delete=<?php echo $user['id']; ?>" class="btn btn-sm btn-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this user?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+                <a href="users.php" class="btn btn-sm btn-outline" style="margin-top: 15px; width: 100%;">
+                    <i class="fas fa-list"></i> View All Users
+                </a>
+            </div>
+        </div>
+    </div>
+
     <script src="../assets/js/quiz.js"></script>
+    <script>
+        function toggleUserPanel() {
+            const panel = document.getElementById('user-panel');
+            panel.classList.toggle('open');
+        }
+        
+        // Close panel when clicking outside
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('user-panel');
+            const btn = document.querySelector('button[onclick="toggleUserPanel()"]');
+            if (panel.classList.contains('open') && !panel.contains(e.target) && !btn.contains(e.target)) {
+                panel.classList.remove('open');
+            }
+        });
+    </script>
 </body>
 </html>
